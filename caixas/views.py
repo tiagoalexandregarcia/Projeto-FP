@@ -1,9 +1,5 @@
 # This Python file uses the following encoding: utf-8
 # ANOTAÇÃO PARA USAR CARACTERES ESPECIAIS AQUI. (MESMO PARA ANOTAÇÕES.)
-""" 
-@edsonlb
-https://www.facebook.com/groups/pythonmania/
-"""
 
 from django.shortcuts import render, HttpResponseRedirect
 from datetime import datetime
@@ -64,6 +60,33 @@ def caixaEditar(request, pk=0):
         return HttpResponseRedirect('/caixas/')
 
     return render(request, 'caixas/formCaixas.html', {'conta': conta, 'pessoas':pessoas})
+
+def caixaFluxo(request):
+    contas = []
+    return render(request,'caixas/fluxo_de_caixa.html',{'contas':contas})
+
+def fluxodecaixa(request):
+    if request.method == 'POST':
+        dataInicial = request.POST.get('dataInicial', '01/01/2014')
+        dataFinal = request.POST.get('dataFinal', '31/12/2014')
+        dataInicial = datetime.strptime(dataInicial,'%d/%m/%Y')
+        dataFinal = datetime.strptime(dataFinal,'%d/%m/%Y')
+        contas = Conta.objects.filter(data__range=(dataInicial, dataFinal))
+        try:
+            '''tes'''
+        except:
+            contas = []
+
+        total = 0
+        for conta in contas:
+            if conta.tipo == 'E':
+                total = total + conta.valor
+            else:
+                total = total - conta.valor
+               
+        return render(request, 'caixas/fluxo_de_caixa.html', 
+            {'contas': contas, 'total': total,'dataInicial':dataInicial, 'dataFinal': dataFinal})
+    return render(request, 'caixas/fluxo_de_caixa.html')            
 
 def caixaExcluir(request, pk=0):
     try:

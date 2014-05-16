@@ -3,13 +3,6 @@
 {% block titulo %}Formulário da Pessoa{% endblock titulo %}
 
 {% block conteudo %}
-<script type="text/javascript">
-  $(function() {
-    $('#datetimepicker1').datetimepicker({
-      language: 'pt-BR'
-    });
-  });
-</script>
 
 <form class="form-horizontal" action="/caixas/salvar/" method="POST" role="form">{% csrf_token %}
 
